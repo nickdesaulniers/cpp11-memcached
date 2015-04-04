@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.0)
+add_executable(main hello.cpp packet.cpp key_value_store.cpp)
+#add_definitions(-Wall -Wextra -O3 -std=c++11 -stdlib=libc++)
+add_definitions(-Wall -Wextra -O3 -std=c++11)
+#add_executable(hash_thing map_of_vectors.cpp)
+
+FIND_PACKAGE(Boost COMPONENTS system)
+IF (Boost_FOUND)
+  INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+  TARGET_LINK_LIBRARIES(main ${Boost_LIBRARIES})
+  #TARGET_LINK_LIBRARIES(hash_thing ${Boost_LIBRARIES})
+  #ADD_DEFINITIONS( "-DHAS_BOOST" )
+  #MESSAGE("BOOST_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+  #MESSAGE("Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
+  #MESSAGE("Boost_LIBRARIES: ${Boost_LIBRARIES}")
+ENDIF()
+
+#MESSAGE("Boost_FOUND: ${Boost_FOUND}")
