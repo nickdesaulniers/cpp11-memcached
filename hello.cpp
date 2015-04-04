@@ -4,15 +4,12 @@
 #include <boost/asio.hpp>
 
 #include "packet.h"
-#include "key_value_store.h"
 
 using boost::asio::ip::tcp;
 
 constexpr int port = 3000;
 constexpr int header_length = 24;
 constexpr char magic = 0x80;
-constexpr char get_op = 0x00;
-constexpr char set_op = 0x01;
 
 void session (tcp::socket socket, const std::shared_ptr<KeyValueStore>& k) {
   boost::system::error_code ec;
@@ -34,28 +31,7 @@ void session (tcp::socket socket, const std::shared_ptr<KeyValueStore>& k) {
         return;
       }
       //Packet::printPacket(data, length);
-      if (data[1] == get_op) {
-        //std::cout << "get" << std::endl;
-        auto p = Packet(data);
-        p.read(socket);
-        if (k->has(p.key)) {
-          std::cout << "key found" << std::endl;
-          std::vector<char> val = k->get(p.key);
-          p.respondToGet(socket, val);
-        } else {
-          std::cout << "key not found" << std::endl;
-        }
-      } else if (data[1] == set_op) {
-        //std::cout << "set" << std::endl;
-        auto p = Packet(data);
-        //std::cout << "created packet" << std::endl;
-        p.read(socket);
-        //std::cout << "p.read" << std::endl;
-        k->set(p.key, p.val);
-        //std::cout << "k->set" << std::endl;
-        p.write(socket);
-        //std::cout << "sent response" << std::endl;
-      }
+      Packet(data, socket, k);
       //std::cout << "========================" << std::endl;
     }
   } catch (std::exception& e) {
