@@ -1,4 +1,4 @@
-#include <iostream>
+#pragma once
 #include <vector>
 #include <boost/asio.hpp>
 
@@ -42,6 +42,8 @@ public:
   char op;
   int ext_len;
   char dat_typ;
+  static const int HEADER_LENGTH = 24;
+  static const char MAGIC = 0x80;
 private:
   uint32_t readUInt32LE (char data [32], size_t offset);
   uint16_t readUInt16LE (char data [32], size_t offset);

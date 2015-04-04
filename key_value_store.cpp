@@ -1,4 +1,3 @@
-#include <iostream>
 #include "key_value_store.h"
 
 void KeyValueStore::set (const std::vector<char>& key, const std::vector<char>& value) {
