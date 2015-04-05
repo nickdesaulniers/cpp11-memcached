@@ -36,3 +36,6 @@ CAS is short for [Compare And Swap](http://en.wikipedia.org/wiki/Compare-and-swa
 4. Connections are handled synchronously.  This hurts throughput, but makes the code slightly simpler.  Boost asio has support for async.
 5. All threads share a key value store.  Shared memory is juggling razors.  Also, I simply wrap access to the key value store in a mutex.  A thread must acquire the mutex once for a set operation and twice for a get operation.  The use of a properly programmed concurrent map would be better, like from [libcds](https://github.com/khizmax/libcds) or even the basic example from [C++ Concurrency in Action: Practical Multithreading](http://www.cplusplusconcurrencyinaction.com/).
 
+###Formatting
+Each C++ source and header is run through `clang-format -style=Mozilla -i <file>`.
+
