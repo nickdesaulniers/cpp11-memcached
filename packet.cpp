@@ -50,7 +50,7 @@ void Packet::respondToSet (tcp::socket& socket) {
 // MUST have extras.
 // MAY have key.
 // MAY have value.
-void Packet::respondToGet (tcp::socket& socket, const std::vector<char>& val) {
+void Packet::respondToGet (tcp::socket& socket, const std::vector<char>& val, bool found) {
   size_t bytes_sent = 0;
   unsigned char res [28] = {
     0x81, 0x00, 0x00, 0x00,
@@ -63,6 +63,12 @@ void Packet::respondToGet (tcp::socket& socket, const std::vector<char>& val) {
   };
   writeUInt32LE(&res[8], val.size() + 4);
   writeUInt32LE(&res[12], opaque);
+  // Section 4.1:
+  // If the status code of a response packet is non-nil, the body of the packet
+  // will contain a textual error message.
+  if (!found) {
+    res[7] = 0x01;
+  }
   // write the header
   try {
     bytes_sent += boost::asio::write(socket, boost::asio::buffer(res));

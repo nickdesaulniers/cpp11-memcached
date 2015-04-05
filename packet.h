@@ -16,9 +16,12 @@ public:
       if (k->has(key)) {
         std::cout << "key found" << std::endl;
         std::vector<char> val = k->get(key);
-        respondToGet(socket, val);
+        respondToGet(socket, val, true);
       } else {
         std::cout << "key not found" << std::endl;
+        std::string msg = "Key not found";
+        std::vector<char> val (msg.cbegin(), msg.cend());
+        respondToGet(socket, val, false);
       }
     } else if (data[1] == static_cast<char>(OpCode::SET)) {
       k->set(key, val);
@@ -26,7 +29,7 @@ public:
     }
   }
   void read (tcp::socket& socket);
-  void respondToGet (tcp::socket& socket, const std::vector<char>& val);
+  void respondToGet (tcp::socket& socket, const std::vector<char>& val, bool found);
   void respondToSet (tcp::socket& socket);
   void set (const std::vector<char>& key, const std::vector<char>& val);
   static void printPacket (const char* const buf, const size_t len);
