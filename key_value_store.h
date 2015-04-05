@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <unordered_map>
+#include <mutex>
 #include <boost/functional/hash.hpp>
 
 namespace std {
