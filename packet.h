@@ -14,8 +14,7 @@ public:
     read(socket);
     if (data[1] == static_cast<char>(OpCode::GET)) {
       if (k->has(key)) {
-        std::vector<char> val = k->get(key);
-        respondToGet(socket, val, true);
+        respondToGet(socket, k->get(key), true);
       } else {
         std::string msg = "Key not found";
         std::vector<char> val (msg.cbegin(), msg.cend());
