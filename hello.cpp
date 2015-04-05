@@ -14,15 +14,10 @@ void session (tcp::socket socket, const std::shared_ptr<KeyValueStore>& k) {
       char data [Packet::HEADER_LENGTH] = { 0 };
       size_t bytes_read = socket.read_some(boost::asio::buffer(data), ec);
       if (ec == boost::asio::error::eof) {
-        std::cout << "end of client input" << std::endl;
         return;
       } else if (ec) {
-        std::cout << "error reading from client" << std::endl;
         throw boost::system::system_error(ec);
-      }
-      if (data[0] != Packet::MAGIC || bytes_read < Packet::HEADER_LENGTH) {
-        std::cout << "no magic byte or didn't read enough" << std::endl;
-        Packet::printPacket(data, bytes_read);
+      } else if (data[0] != Packet::MAGIC || bytes_read < Packet::HEADER_LENGTH) {
         return;
       }
       Packet(data, socket, k);
