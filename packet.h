@@ -22,7 +22,7 @@ public:
       }
     } else if (data[1] == static_cast<char>(OpCode::SET)) {
       k->set(key, val);
-      responsdToSet(socket);
+      respondToSet(socket);
     }
   }
   void read (tcp::socket& socket);
