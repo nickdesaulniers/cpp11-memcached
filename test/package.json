@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "coffee-script": "^1.9.1",
+    "memcache": "^0.3.0",
+    "memjs": "^0.8.5"
+  },
+  "scripts": {
+    "test": "./node_modules/coffee-script/bin/coffee send_file.coffee"
+  }
+}
