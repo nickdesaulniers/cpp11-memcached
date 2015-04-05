@@ -10,7 +10,6 @@ enum class OpCode : char { GET = 0x00, SET = 0x01 };
 
 class Packet {
 public:
-  // 32 bytes for a get request
   Packet (char data [24], tcp::socket& socket, const std::shared_ptr<KeyValueStore>& k): bod_len(readUInt32LE(data, 8)), opaque(readUInt32LE(data, 12)), key_len(readUInt16LE(data, 2)), op(data[1]), ext_len(data[4]) {
     read(socket);
     if (data[1] == static_cast<char>(OpCode::GET)) {
@@ -23,12 +22,12 @@ public:
       }
     } else if (data[1] == static_cast<char>(OpCode::SET)) {
       k->set(key, val);
-      write(socket);
+      responsdToSet(socket);
     }
   }
   void read (tcp::socket& socket);
-  void write (tcp::socket& socket);
   void respondToGet (tcp::socket& socket, const std::vector<char>& val);
+  void respondToSet (tcp::socket& socket);
   void set (const std::vector<char>& key, const std::vector<char>& val);
   static void printPacket (const char* const buf, const size_t len);
   static void printPacket (const std::vector<char>& buf);

@@ -28,7 +28,10 @@ void Packet::read (tcp::socket& socket) {
   }
 }
 
-void Packet::write (tcp::socket& socket) {
+// Must have extras.
+// May have key.
+// May have value.
+void Packet::respondToSet (tcp::socket& socket) {
   size_t bytes_sent = 0;
   char res [24] = {
     static_cast<char>(0x81), 0x02, 0x00, 0x00,
@@ -44,9 +47,9 @@ void Packet::write (tcp::socket& socket) {
   } catch (std::exception& e) { std::cout << e.what() << std::endl; }
 }
 
-// Must have extras.
-// May have key.
-// May have value.
+// MUST have extras.
+// MAY have key.
+// MAY have value.
 void Packet::respondToGet (tcp::socket& socket, const std::vector<char>& val) {
   size_t bytes_sent = 0;
   char res [28] = {
