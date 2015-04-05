@@ -46,5 +46,5 @@ public:
 private:
   uint32_t readUInt32LE (char data [32], size_t offset);
   uint16_t readUInt16LE (char data [32], size_t offset);
-  void writeUInt32LE (char* const data, uint32_t val);
+  void writeUInt32LE (unsigned char* const data, uint32_t val);
 };

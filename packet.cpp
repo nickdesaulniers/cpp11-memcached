@@ -33,8 +33,8 @@ void Packet::read (tcp::socket& socket) {
 // May have value.
 void Packet::respondToSet (tcp::socket& socket) {
   size_t bytes_sent = 0;
-  char res [24] = {
-    static_cast<char>(0x81), 0x02, 0x00, 0x00,
+  unsigned char res [24] = {
+    0x81, 0x02, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00,
@@ -52,8 +52,8 @@ void Packet::respondToSet (tcp::socket& socket) {
 // MAY have value.
 void Packet::respondToGet (tcp::socket& socket, const std::vector<char>& val) {
   size_t bytes_sent = 0;
-  char res [28] = {
-    static_cast<char>(0x81), 0x00, 0x00, 0x00,
+  unsigned char res [28] = {
+    0x81, 0x00, 0x00, 0x00,
     0x04, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00,
@@ -80,7 +80,7 @@ uint16_t Packet::readUInt16LE (char data [32], size_t offset) {
   return htons(*reinterpret_cast<uint16_t*>(&data[offset]));
 }
 
-void Packet::writeUInt32LE (char* const data, uint32_t val) {
+void Packet::writeUInt32LE (unsigned char* const data, uint32_t val) {
   data[0] = val & 0xFF000000;
   data[1] = val & 0x00FF0000;
   data[2] = val & 0x0000FF00;
