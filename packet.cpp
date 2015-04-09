@@ -14,10 +14,10 @@ Packet::Packet(char data[24], tcp::socket& socket,
     } else {
       std::string msg = "Key not found";
       std::vector<char> val(msg.cbegin(), msg.cend());
-      respondToGet(socket, val, false);
+      respondToGet(socket, FlaggedValue { val, 0 }, false);
     }
   } else if (data[1] == static_cast<char>(OpCode::SET)) {
-    k->set(key, val);
+    k->set(key, FlaggedValue { val, flags });
     respondToSet(socket);
   }
 }
@@ -26,11 +26,16 @@ void Packet::read(tcp::socket& socket) {
   uint32_t bytes_read = 0;
 
   if (ext_len > 0) {
-    std::vector<char> garbage(ext_len);
+    std::vector<char> extras(ext_len);
     while (bytes_read < static_cast<uint32_t>(ext_len)) {
-      bytes_read += socket.receive(boost::asio::buffer(garbage));
+      bytes_read += socket.receive(boost::asio::buffer(extras));
     }
     bytes_read = 0;
+
+    if (extras.size() > 4) {
+      char flags_buf [4] = { extras[0], extras[1], extras[2], extras[3] };
+      flags = readUInt32LE(flags_buf, 0);
+    }
   }
 
   if (key_len > 0) {
@@ -69,15 +74,16 @@ void Packet::respondToSet(tcp::socket& socket) {
 // MUST have extras.
 // MAY have key.
 // MAY have value.
-void Packet::respondToGet(tcp::socket& socket, const std::vector<char>& val,
+void Packet::respondToGet(tcp::socket& socket, const FlaggedValue& fv,
                           bool found) {
   size_t bytes_sent = 0;
   unsigned char res[28] = { 0x81, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00 };
-  writeUInt32LE(&res[8], val.size() + 4);
+  writeUInt32LE(&res[8], fv.value.size() + 4);
   writeUInt32LE(&res[12], opaque);
+  writeUInt32LE(&res[24], fv.flags);
   // Section 4.1:
   // If the status code of a response packet is non-nil, the body of the packet
   // will contain a textual error message.
@@ -91,7 +97,7 @@ void Packet::respondToGet(tcp::socket& socket, const std::vector<char>& val,
     std::cerr << e.what() << std::endl;
   }
   bytes_sent = 0;
-  bytes_sent += socket.write_some(boost::asio::buffer(val));
+  bytes_sent += socket.write_some(boost::asio::buffer(fv.value));
 }
 
 // x86-64 is little endian, but this won't work elsewhere...

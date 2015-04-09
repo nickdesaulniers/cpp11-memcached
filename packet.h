@@ -16,7 +16,7 @@ public:
   Packet(char data[24], tcp::socket& socket,
          const std::shared_ptr<KeyValueStore>& k);
   void read(tcp::socket& socket);
-  void respondToGet(tcp::socket& socket, const std::vector<char>& val,
+  void respondToGet(tcp::socket& socket, const FlaggedValue& val,
                     bool found);
   void respondToSet(tcp::socket& socket);
   static void printPacket(const char* const buf, const size_t len);
@@ -25,6 +25,7 @@ public:
   std::vector<char> val;
   uint32_t bod_len;
   uint32_t opaque;
+  uint32_t flags;
   uint16_t key_len;
   uint16_t reserved;
   char magic;
