@@ -12,12 +12,12 @@ class Packet {
   uint32_t readUInt32LE(char data[32], size_t offset);
   uint16_t readUInt16LE(char data[32], size_t offset);
   void writeUInt32LE(unsigned char* const data, uint32_t val);
+
 public:
   Packet(char data[24], tcp::socket& socket,
          const std::shared_ptr<KeyValueStore>& k);
   void read(tcp::socket& socket);
-  void respondToGet(tcp::socket& socket, const FlaggedValue& val,
-                    bool found);
+  void respondToGet(tcp::socket& socket, const FlaggedValue& val, bool found);
   void respondToSet(tcp::socket& socket);
   static void printPacket(const char* const buf, const size_t len);
   static void printPacket(const std::vector<char>& buf);
@@ -35,4 +35,3 @@ public:
   static const int HEADER_LENGTH = 24;
   static const char MAGIC = 0x80;
 };
-

@@ -14,10 +14,10 @@ Packet::Packet(char data[24], tcp::socket& socket,
     } else {
       std::string msg = "Key not found";
       std::vector<char> val(msg.cbegin(), msg.cend());
-      respondToGet(socket, FlaggedValue { val, 0 }, false);
+      respondToGet(socket, FlaggedValue{ val, 0 }, false);
     }
   } else if (data[1] == static_cast<char>(OpCode::SET)) {
-    k->set(key, FlaggedValue { val, flags });
+    k->set(key, FlaggedValue{ val, flags });
     respondToSet(socket);
   }
 }
@@ -33,7 +33,7 @@ void Packet::read(tcp::socket& socket) {
     bytes_read = 0;
 
     if (extras.size() > 4) {
-      char flags_buf [4] = { extras[0], extras[1], extras[2], extras[3] };
+      char flags_buf[4] = { extras[0], extras[1], extras[2], extras[3] };
       flags = readUInt32LE(flags_buf, 0);
     }
   }

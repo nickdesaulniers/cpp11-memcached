@@ -21,10 +21,10 @@ class KeyValueStore {
   std::mutex mut;
   std::unordered_map<std::vector<char>, FlaggedValue,
                      std::hash<std::vector<char> > > data;
+
 public:
   KeyValueStore() : mut() {}
   void set(const std::vector<char>& key, const FlaggedValue& fv);
   const FlaggedValue& get(const std::vector<char>& key);
   bool has(const std::vector<char>& key);
 };
-

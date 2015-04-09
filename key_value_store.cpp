@@ -1,7 +1,6 @@
 #include "key_value_store.h"
 
-void KeyValueStore::set(const std::vector<char>& key,
-                        const FlaggedValue& fv) {
+void KeyValueStore::set(const std::vector<char>& key, const FlaggedValue& fv) {
   std::lock_guard<std::mutex> lk(mut);
   try {
     data[key] = fv;
