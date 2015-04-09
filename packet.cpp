@@ -110,9 +110,9 @@ uint16_t Packet::readUInt16LE(char data[32], size_t offset) {
 }
 
 void Packet::writeUInt32LE(unsigned char* const data, uint32_t val) {
-  data[0] = val & 0xFF000000;
-  data[1] = val & 0x00FF0000;
-  data[2] = val & 0x0000FF00;
+  data[0] = (val & 0xFF000000) >> 24;
+  data[1] = (val & 0x00FF0000) >> 16;
+  data[2] = (val & 0x0000FF00) >> 8;
   data[3] = val & 0x000000FF;
 }
 
