@@ -59,13 +59,12 @@ void Packet::read(tcp::socket& socket) {
 // May have key.
 // May have value.
 void Packet::respondToSet(tcp::socket& socket) {
-  size_t bytes_sent = 0;
   unsigned char res[24] = { 0x81, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
   writeUInt32LE(&res[12], opaque);
   try {
-    bytes_sent += boost::asio::write(socket, boost::asio::buffer(res));
+    boost::asio::write(socket, boost::asio::buffer(res));
   } catch (std::exception& e) {
     std::cout << e.what() << std::endl;
   }
@@ -76,7 +75,6 @@ void Packet::respondToSet(tcp::socket& socket) {
 // MAY have value.
 void Packet::respondToGet(tcp::socket& socket, const FlaggedValue& fv,
                           bool found) {
-  size_t bytes_sent = 0;
   unsigned char res[28] = { 0x81, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -90,14 +88,12 @@ void Packet::respondToGet(tcp::socket& socket, const FlaggedValue& fv,
   if (!found) {
     res[7] = 0x01;
   }
-  // write the header
   try {
-    bytes_sent += boost::asio::write(socket, boost::asio::buffer(res));
+    boost::asio::write(socket, boost::asio::buffer(res));
+    boost::asio::write(socket, boost::asio::buffer(fv.value));
   } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
   }
-  bytes_sent = 0;
-  bytes_sent += socket.write_some(boost::asio::buffer(fv.value));
 }
 
 // x86-64 is little endian, but this won't work elsewhere...
