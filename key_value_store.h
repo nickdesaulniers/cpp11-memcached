@@ -13,14 +13,13 @@ template <typename T, typename A> struct hash<std::vector<T, A> > {
 }
 
 class KeyValueStore {
+  std::mutex mut;
+  std::unordered_map<std::vector<char>, std::vector<char>,
+                     std::hash<std::vector<char> > > data;
 public:
   KeyValueStore() : mut() {}
   void set(const std::vector<char>& key, const std::vector<char>& value);
   const std::vector<char>& get(const std::vector<char>& key);
   bool has(const std::vector<char>& key);
-
-private:
-  std::mutex mut;
-  std::unordered_map<std::vector<char>, std::vector<char>,
-                     std::hash<std::vector<char> > > data;
 };
+
