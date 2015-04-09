@@ -31,10 +31,9 @@ CAS is short for [Compare And Swap](http://en.wikipedia.org/wiki/Compare-and-swa
 
 ###Tradeoffs
 1. This code assumes all key value pairs can fit into memory on this machine.  This doesn't scale well beyond a single machine.  Moving to a distributed message queue might be better, but adds [complexity in keeping all caches coherent](http://martinfowler.com/bliki/TwoHardThings.html).
-2. Endianess.  The code that handles converting from bytes to ints depends on the host being little endian (like x86-64, ARM devices might have trouble).  This part of the code should be rewritten to be more portable.
-3. One thread is spawned per connection.  This adds latency as the thread is being spawned, and can easily use up system resources in a DoS attack.  Instead, a thread pool should be used.
-4. Connections are handled synchronously.  This hurts throughput, but makes the code slightly simpler.  Boost asio has support for async.
-5. All threads share a key value store.  Shared memory is juggling razors.  Also, I simply wrap access to the key value store in a mutex.  A thread must acquire the mutex once for a set operation and twice for a get operation.  The use of a properly programmed concurrent map would be better, like from [libcds](https://github.com/khizmax/libcds) or even the basic example from [C++ Concurrency in Action: Practical Multithreading](http://www.cplusplusconcurrencyinaction.com/).
+2. One thread is spawned per connection.  This adds latency as the thread is being spawned, and can easily use up system resources in a DoS attack.  Instead, a thread pool should be used.
+3. Connections are handled synchronously.  This hurts throughput, but makes the code slightly simpler.  Boost asio has support for async.
+4. All threads share a key value store.  Shared memory is juggling razors.  Also, I simply wrap access to the key value store in a mutex.  A thread must acquire the mutex once for a set operation and twice for a get operation.  The use of a properly programmed concurrent map would be better, like from [libcds](https://github.com/khizmax/libcds) or even the basic example from [C++ Concurrency in Action: Practical Multithreading](http://www.cplusplusconcurrencyinaction.com/).
 
 ###Formatting
 Each C++ source and header is run through `clang-format -style=Mozilla -i <file>`.

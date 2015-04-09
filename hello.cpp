@@ -28,17 +28,7 @@ void session(tcp::socket socket, const std::shared_ptr<KeyValueStore>& k) {
   }
 }
 
-bool isBigEndian() {
-  int i = 1;
-  return (*(char*)&i) == 0;
-}
-
 int main() {
-  if (isBigEndian()) {
-    std::cerr << "Parsing code not portable to big endian hosts, yet"
-              << std::endl;
-    return 1;
-  }
   auto k = std::make_shared<KeyValueStore>();
   try {
     boost::asio::io_service io_service;
@@ -54,3 +44,4 @@ int main() {
     std::cerr << e.what() << std::endl;
   }
 }
+

@@ -28,8 +28,6 @@ attackServer = ->
   getOrSet (err, val) ->
     console.log err, val.toString()
     assert possibleKeys.indexOf val.toString() > -1
-    # huh, this seems to timeout, will need som investigating
-    # stays running even after server killed, 3spooky5me
     setTimeout attackServer, Math.random() * 100
 
 if cluster.isMaster
