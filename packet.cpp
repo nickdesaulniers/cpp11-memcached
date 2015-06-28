@@ -25,11 +25,11 @@ Packet::Packet(char data[24], socket& socket,
 }
 
 void Packet::read(socket& socket) {
-  uint32_t bytes_read = 0;
+  std::uint32_t bytes_read = 0;
 
   if (ext_len > 0) {
     std::vector<char> extras(ext_len);
-    while (bytes_read < static_cast<uint32_t>(ext_len)) {
+    while (bytes_read < static_cast<std::uint32_t>(ext_len)) {
       bytes_read += socket.receive(boost::asio::buffer(extras));
     }
     bytes_read = 0;
@@ -49,7 +49,7 @@ void Packet::read(socket& socket) {
   }
 
   if (bod_len > key_len) {
-    uint32_t val_len = bod_len - key_len - ext_len;
+    std::uint32_t val_len = bod_len - key_len - ext_len;
     val.resize(val_len);
     while (bytes_read < val_len) {
       bytes_read += socket.receive(boost::asio::buffer(val));
@@ -98,15 +98,15 @@ void Packet::respondToGet(socket& socket, const FlaggedValue& fv, bool found) {
 }
 
 // x86-64 is little endian, but this won't work elsewhere...
-uint32_t Packet::readUInt32LE(char data[32], size_t offset) {
-  return htonl(*reinterpret_cast<uint32_t*>(&data[offset]));
+std::uint32_t Packet::readUInt32LE(char data[32], size_t offset) {
+  return htonl(*reinterpret_cast<std::uint32_t*>(&data[offset]));
 }
 
-uint16_t Packet::readUInt16LE(char data[32], size_t offset) {
-  return htons(*reinterpret_cast<uint16_t*>(&data[offset]));
+std::uint16_t Packet::readUInt16LE(char data[32], size_t offset) {
+  return htons(*reinterpret_cast<std::uint16_t*>(&data[offset]));
 }
 
-void Packet::writeUInt32LE(unsigned char* const data, uint32_t val) {
+void Packet::writeUInt32LE(unsigned char* const data, std::uint32_t val) {
   data[0] = (val & 0xFF000000) >> 24;
   data[1] = (val & 0x00FF0000) >> 16;
   data[2] = (val & 0x0000FF00) >> 8;

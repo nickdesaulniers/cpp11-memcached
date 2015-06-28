@@ -9,9 +9,9 @@ enum class OpCode : char { GET = 0x00, SET = 0x01 };
 class Packet {
 
   typedef boost::asio::ip::tcp::socket socket;
-  uint32_t readUInt32LE(char data[32], size_t offset);
-  uint16_t readUInt16LE(char data[32], size_t offset);
-  void writeUInt32LE(unsigned char* const data, uint32_t val);
+  std::uint32_t readUInt32LE(char data[32], size_t offset);
+  std::uint16_t readUInt16LE(char data[32], size_t offset);
+  void writeUInt32LE(unsigned char* const data, std::uint32_t val);
 
 public:
   Packet(char data[24], socket& socket,
@@ -23,11 +23,11 @@ public:
   static void printPacket(const std::vector<char>& buf);
   std::vector<char> key;
   std::vector<char> val;
-  uint32_t bod_len;
-  uint32_t opaque;
-  uint32_t flags;
-  uint16_t key_len;
-  uint16_t reserved;
+  std::uint32_t bod_len;
+  std::uint32_t opaque;
+  std::uint32_t flags;
+  std::uint16_t key_len;
+  std::uint16_t reserved;
   char magic;
   char op;
   int ext_len;
