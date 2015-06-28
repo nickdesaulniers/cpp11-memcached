@@ -1,6 +1,6 @@
 #include "packet.h"
 
-Packet::Packet(char data[24], tcp::socket& socket,
+Packet::Packet(char data[24], socket& socket,
                const std::shared_ptr<KeyValueStore>& k)
     : bod_len(readUInt32LE(data, 8)),
       opaque(readUInt32LE(data, 12)),
@@ -24,7 +24,7 @@ Packet::Packet(char data[24], tcp::socket& socket,
   }
 }
 
-void Packet::read(tcp::socket& socket) {
+void Packet::read(socket& socket) {
   uint32_t bytes_read = 0;
 
   if (ext_len > 0) {
@@ -60,7 +60,7 @@ void Packet::read(tcp::socket& socket) {
 // Must have extras.
 // May have key.
 // May have value.
-void Packet::respondToSet(tcp::socket& socket) {
+void Packet::respondToSet(socket& socket) {
   unsigned char res[24] = { 0x81, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
@@ -75,8 +75,7 @@ void Packet::respondToSet(tcp::socket& socket) {
 // MUST have extras.
 // MAY have key.
 // MAY have value.
-void Packet::respondToGet(tcp::socket& socket, const FlaggedValue& fv,
-                          bool found) {
+void Packet::respondToGet(socket& socket, const FlaggedValue& fv, bool found) {
   unsigned char res[28] = { 0x81, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
