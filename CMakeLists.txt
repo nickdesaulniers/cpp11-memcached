@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-add_executable(main hello.cpp packet.cpp key_value_store.cpp)
+add_executable(main main.cpp packet.cpp key_value_store.cpp)
 add_definitions(-Wall -Wextra -O3 -std=c++11)
 
 FIND_PACKAGE(Threads REQUIRED)

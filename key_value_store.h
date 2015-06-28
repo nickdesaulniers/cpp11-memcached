@@ -25,6 +25,6 @@ class KeyValueStore {
 public:
   KeyValueStore() : mut() {}
   void set(const std::vector<char>& key, const FlaggedValue& fv);
-  const FlaggedValue& get(const std::vector<char>& key);
-  bool has(const std::vector<char>& key);
+  std::pair<bool, const FlaggedValue&> get(const std::vector<char>& key);
 };
+

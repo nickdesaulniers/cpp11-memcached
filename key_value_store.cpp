@@ -9,12 +9,8 @@ void KeyValueStore::set(const std::vector<char>& key, const FlaggedValue& fv) {
   }
 }
 
-const FlaggedValue& KeyValueStore::get(const std::vector<char>& key) {
+std::pair<bool, const FlaggedValue&> KeyValueStore::get(const std::vector<char>& key) {
   std::lock_guard<std::mutex> lk(mut);
-  return data[key];
+  return std::make_pair(data.count(key) > 0, std::ref(data[key]));
 }
 
-bool KeyValueStore::has(const std::vector<char>& key) {
-  std::lock_guard<std::mutex> lk(mut);
-  return data.count(key) > 0;
-}

@@ -7,10 +7,12 @@ Packet::Packet(char data[24], tcp::socket& socket,
       key_len(readUInt16LE(data, 2)),
       op(data[1]),
       ext_len(data[4]) {
+
   read(socket);
   if (data[1] == static_cast<char>(OpCode::GET)) {
-    if (k->has(key)) {
-      respondToGet(socket, k->get(key), true);
+    std::pair<bool, const FlaggedValue&> value { k->get(key) };
+    if (value.first) {
+      respondToGet(socket, value.second, true);
     } else {
       std::string msg = "Key not found";
       std::vector<char> val(msg.cbegin(), msg.cend());
