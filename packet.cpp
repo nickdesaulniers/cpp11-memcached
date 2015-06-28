@@ -10,7 +10,7 @@ Packet::Packet(char data[24], tcp::socket& socket,
 
   read(socket);
   if (data[1] == static_cast<char>(OpCode::GET)) {
-    std::pair<bool, const FlaggedValue&> value { k->get(key) };
+    std::pair<bool, const FlaggedValue&> value{ k->get(key) };
     if (value.first) {
       respondToGet(socket, value.second, true);
     } else {
